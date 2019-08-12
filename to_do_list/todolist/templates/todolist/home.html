@@ -1,0 +1,74 @@
+{% extends 'todolist/base.html' %}
+
+{% load static %}
+
+{% block css %}{% static 'todolist/css/home.css' %}{% endblock css %}
+{% block 标题 %}你的个人代办清单{% endblock 标题 %}
+{% block 主页高亮 %}active{% endblock 主页高亮 %}
+{% block 主体 %}
+{{ 警告 }}
+<br>
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead class="thead-light">
+		<tr>
+			<th>序号</th>
+			<th>代办事项</th>
+			<th>编辑</th>
+			<th>划掉</th>
+			<th>删除</th>
+		</tr>
+		</thead>
+		<tbody class="no-underline">
+
+		{% for 每一件事 in 清单 %}
+			{% if 每一件事.已完成 %}
+				<tr>
+					<th class="text-dark" scope="row">{{ forloop.counter }}</th>
+					<td class="text-dark" id="line-through">去超市</td>
+					<td class="text-secondary">不可编辑</td>
+					<td>
+						<form method="POST" action="{% url 'todolist:划掉' forloop.counter %}">
+							{% csrf_token %}
+							<input name="完成状态" type="hidden" value="未完成">
+							<button type="submit" class="btn btn-danger btn-sm">撤销</button>
+						</form>
+					</td>
+					<td>
+						<form method="POST" action="{% url 'todolist:删除' forloop.counter %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-danger btn-sm">删除</button>
+						</form>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<th scope="row">{{ forloop.counter }}</th>
+					<td>{{ 每一件事.待办事项 }}</td>
+					<td>
+						<a href="{% url 'todolist:编辑' forloop.counter %}">
+							<button type="submit" class="btn btn-primary btn-sm">编辑</button>
+						</a>
+					</td>
+					<td>
+						<form method="POST" action="{% url 'todolist:划掉' forloop.counter %}">
+							{% csrf_token %}
+							<input name="完成状态" type="hidden" value="已完成">
+							<button type="submit" class="btn btn-primary btn-sm">划掉</button>
+						</form>
+					</td>
+					<td>
+						<form method="POST" action="{% url 'todolist:删除' forloop.counter %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-primary btn-sm">删除</button>
+						</form>
+					</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+
+		</tbody>
+	</table>
+
+</div>
+{% endblock 主体 %}
