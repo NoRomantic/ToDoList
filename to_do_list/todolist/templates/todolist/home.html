@@ -6,8 +6,25 @@
 {% block 标题 %}你的个人代办清单{% endblock 标题 %}
 {% block 主页高亮 %}active{% endblock 主页高亮 %}
 {% block 主体 %}
-{{ 警告 }}
-<br>
+
+{% if 警告 %}
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+		<strong><center>{{ 警告 }}</center></strong>
+	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+{% endif %}
+
+{% if 信息 %}
+	<div class="alert alert-primary alert-dismissible fade show" role="alert">
+		<strong><center>{{ 信息 }}</center></strong>
+	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+{% endif %}
+
 <div class="table-responsive">
 	<table class="table table-hover">
 		<thead class="thead-light">
@@ -58,10 +75,34 @@
 						</form>
 					</td>
 					<td>
-						<form method="POST" action="{% url 'todolist:删除' forloop.counter %}">
+
+							<button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-primary btn-sm">删除</button>
+
+
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+							<div class="modal-content">
+							  <div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">请确认</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+							  </div>
+							  <div class="modal-body">
+								确定要删除<strong>未办事项：{{ 每一件事.待办事项 }}</strong>吗?
+							  </div>
+							  <div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+								  <form method="POST" action="{% url 'todolist:删除' forloop.counter %}">
 							{% csrf_token %}
-							<button type="submit" class="btn btn-primary btn-sm">删除</button>
-						</form>
+								<button type="submit" class="btn btn-primary">确认</button>
+									  </form>
+							  </div>
+							</div>
+						  </div>
+						</div>
+
 					</td>
 				</tr>
 			{% endif %}

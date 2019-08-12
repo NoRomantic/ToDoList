@@ -9,5 +9,8 @@ body{
       }
 
 nav input{
-width: 75%!important;
+width: 39%!important;
+}
+main{
+    font-size: 1.1em
 }
